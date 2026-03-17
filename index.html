@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ular Tangga 💗</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>Ular Tangga 💗</h1>
+
+  <!-- INFO GILIRAN -->
+  <p id="info">Giliran: Player 1</p>
+
+  <!-- BOARD -->
+  <div id="board"></div>
+
+  <!-- DICE -->
+  <div id="dice" onclick="rollDice()">🎲</div>
+
+  <!-- ROOM -->
+  <div style="margin-top:20px;">
+    <button onclick="createRoom()">Buat Room</button>
+    <input type="text" id="roomInput" placeholder="Masukkan Kode Room">
+    <button onclick="joinRoom()">Gabung</button>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" style="display:none;">
+    <div id="modalContent">
+      <h2 id="eventTitle"></h2>
+      <p id="eventText"></p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <!-- SOUND -->
+  <audio id="tingSound" src="ting.mp3"></audio>
+
+  <!-- 🔥 FIREBASE CDN (WAJIB) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+  <!-- SCRIPT GAME -->
+  <script src="script.js"></script>
+
+</body>
+</html>
