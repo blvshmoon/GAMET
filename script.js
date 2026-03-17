@@ -1,57 +1,18 @@
-// ===== FIREBASE =====
-const firebaseConfig = {
-  apiKey: "AIzaSyCjmjvMxFB8eDRYmyvSldsiBNJBs5fBGEQ",
-  authDomain: "uler-tangga-td.firebaseapp.com",
-  databaseURL: "https://uler-tangga-td-default-rtdb.firebaseio.com",
-  projectId: "uler-tangga-td",
-  storageBucket: "uler-tangga-td.firebasestorage.app",
-  messagingSenderId: "973713138088",
-  appId: "1:973713138088:web:fefaee5ba83d9069833d9d"
-};
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const spinBtn = document.getElementById("spinBtn");
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// 🎡 isi wheel
+const options = [
+  "Difa", "Lia",
+  "Difa", "Lia",
+  "Difa", "Lia",
+  "Difa", "Lia"
+];
 
-// ===== DATA BOARD (WAJIB DI ATAS) =====
-const snakes = {99:54,70:55,52:42,25:2};
-const ladders = {4:14,9:31,28:84,40:59};
-
-// ===== GAME =====
-const board = document.getElementById("board");
-const diceEl = document.getElementById("dice");
-
-let positions = [0, 0];
-let currentPlayer = 0;
-let moving = false;
-
-let roomId = null;
-let playerIndex = null;
-let lastEventText = "";
-
-// ===== PERTANYAAN 💗 =====
-const truthList = [
-'kamu suka kesel ga kalo aku terus nanya "kamu sayang sama aku ga??" ,kenapa??',
-'menurut kamu aku masii egois ga waktu kita berantem??',
-'menurut kamu apa kebiasaan aku yang sebenernya bikin kamu cape tapi kamu ga berani ngomong??',
-'kapan terakhir kali kamu bohong ke aku meski bohong kecil dan kenapa kamu ngerasa perlu ngelakuin itu??',
-'kalo kamu lagi cemburu aku harus ngapaian??',
-'menurut kamu seberapa penting sii rasa cemburu di dalam hubungan??',
-'ada ga hal yang menurut aku biasa aja tapi menurut kamu itu tuh ngeselin bangettt??',
-'gimana caranya biar aku bisa jadi pasangan yang terbaik buat kamu??',
-'ada ga masalah yang udaa kita anggap beres padahal masii pengen kamu bahas??',
-'ada ga orang lain yang akhir² ini kamu chat secara intens??',
-'menurut kamu alasan seseorang selingkuh itu kenapa??',
-'aku udaa jadi support system kamu atau belum?? kenapa??',
-'kalo kamu kecewa sama aku gimana caranya biar kamu bisa maafin aku??',
-'menurut kamu selain selingkuh apa sii yang bisa bikin hubungan kita rusak??',
-'ada ga hal yang belum kamu percayai sepenuhnya dari aku??',
-'apa yang ada dipikaran kamu waktu pas pertama kali kenal??',
-'kalo semisal kamu udaa tau semua keburukan aku apa yang bakal kamu lakuin??',
-'hal apa yang sering bikin kamu overthinking??',
-'sejauh ini aku lebih sering ngertiin kamu atau banyak salah pahamnya??',
-'ada ga hal yang bikin kamu insecure di dalam hubungan ini??',
-'apa yang kamu rasain waktu aku ceritain masa lalu aku??',
-'dari 1-10 seberapa besar kamu ngerasa disayang sama aku?? kenapa??',
+// 🎯 pertanyaan
+const questions = {
+  Difa: [
 'kalau kamu lagi cape, terus respon aku ga sesuai sama apa yang kamu mau atau beda dari biasanya ( lebih cuek ), kamu marah atau malah nambah cape? dan kenapa?',
 'semisalnya takdir berkata lain, kita yang awalnya mau tinggal bareng malah ga jadi, apa solusi dari masalah ini?',
 'pas kita tinggal bareng nih, pasti selalu panggil sayang, nah kalau aku ga manggil sayang ke kamu seharian, kamu bakal mikir aku udah ga sayang atau aku udah bosen manggil sayang?',
@@ -74,45 +35,117 @@ const truthList = [
 'siapa tau nanti kamu ngerasa ga kayak di posisi sebelumnya di hubungan ini, kamu ngerasa lebih turun posisi, yang tadinya di prioritasin jadi ga di prioritasin sama sekali, atau dibiarin sama aku. kamu ngeraih posisi sebelumnya atau langsung aja serang aku kenapa aku berubah gitu aja?',
 'aku kan pelupa yang di sengaja, kalau aku pura-pura lupain hal-hal kecil tentang kamu, kamu gimana? respon nya',
 'aku mau minta sesuatu dari kamu yang ga kamu pikirkan sama sekali sebelumnya, kamu siap ngasih nya?'
-];
+  ],
 
-// ===== BOARD =====
-function createBoard(){
-  let zigzag = true;
+  Lia: [
+'kamu suka kesel ga kalo aku terus nanya "kamu sayang sama aku ga??" ,kenapa??',
+'menurut kamu aku masii egois ga waktu kita berantem??',
+'menurut kamu apa kebiasaan aku yang sebenernya bikin kamu cape tapi kamu ga berani ngomong??',
+'kapan terakhir kali kamu bohong ke aku meski bohong kecil dan kenapa kamu ngerasa perlu ngelakuin itu??',
+'kalo kamu lagi cemburu aku harus ngapaian??',
+'menurut kamu seberapa penting sii rasa cemburu di dalam hubungan??',
+'ada ga hal yang menurut aku biasa aja tapi menurut kamu itu tuh ngeselin bangettt??',
+'gimana caranya biar aku bisa jadi pasangan yang terbaik buat kamu??',
+'ada ga masalah yang udaa kita anggap beres padahal masii pengen kamu bahas??',
+'ada ga orang lain yang akhir² ini kamu chat secara intens??',
+'menurut kamu alasan seseorang selingkuh itu kenapa??',
+'aku udaa jadi support system kamu atau belum?? kenapa??',
+'kalo kamu kecewa sama aku gimana caranya biar kamu bisa maafin aku??',
+'menurut kamu selain selingkuh apa sii yang bisa bikin hubungan kita rusak??',
+'ada ga hal yang belum kamu percayai sepenuhnya dari aku??',
+'apa yang ada dipikaran kamu waktu pas pertama kali kenal??',
+'kalo semisal kamu udaa tau semua keburukan aku apa yang bakal kamu lakuin??',
+'hal apa yang sering bikin kamu overthinking??',
+'sejauh ini aku lebih sering ngertiin kamu atau banyak salah pahamnya??',
+'ada ga hal yang bikin kamu insecure di dalam hubungan ini??',
+'apa yang kamu rasain waktu aku ceritain masa lalu aku??',
+'dari 1-10 seberapa besar kamu ngerasa disayang sama aku?? kenapa??'
+  ]
+};
 
-  for(let row=10; row>=1; row--){
-    let nums = [];
-    for(let col=1; col<=10; col++){
-      nums.push((row-1)*10+col);
-    }
+let angle = 0;
 
-    if(!zigzag) nums.reverse();
-    zigzag = !zigzag;
+function drawWheel() {
+  const arc = (2 * Math.PI) / options.length;
 
-    nums.forEach(num=>{
-      let cell = document.createElement("div");
-      cell.className = "cell";
-      cell.id = "cell-" + num;
-      cell.innerText = num;
+  for (let i = 0; i < options.length; i++) {
+    ctx.beginPath();
 
-      if(snakes[num]){
-        let s = document.createElement("div");
-        s.className = "icon";
-        s.innerText = "🐍";
-        cell.appendChild(s);
-      }
+    // warna beda
+    ctx.fillStyle = options[i] === "Difa" ? "#ffb6c1" : "#ff69b4";
 
-      if(ladders[num]){
-        let l = document.createElement("div");
-        l.className = "icon";
-        l.innerText = "🪜";
-        cell.appendChild(l);
-      }
+    ctx.moveTo(150, 150);
+    ctx.arc(150, 150, 150, i * arc, (i + 1) * arc);
+    ctx.fill();
 
-      board.appendChild(cell);
-    });
+    ctx.save();
+    ctx.translate(150, 150);
+    ctx.rotate(i * arc + arc / 2);
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 16px Comic Sans MS";
+
+    // ✨ glow
+    ctx.shadowColor = "#ff69b4";
+    ctx.shadowBlur = 12;
+
+    ctx.fillText(options[i], 50, 5);
+
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
   }
 }
 
-// ===== INIT =====
-createBoard();
+function spinWheel() {
+  let spin = Math.random() * 360 + 720;
+  let duration = 2000;
+  let start = null;
+
+  function animate(timestamp) {
+    if (!start) start = timestamp;
+    let progress = timestamp - start;
+    let rotation = spin * (progress / duration);
+
+    ctx.clearRect(0, 0, 300, 300);
+    ctx.save();
+    ctx.translate(150, 150);
+    ctx.rotate((angle + rotation) * Math.PI / 180);
+    ctx.translate(-150, -150);
+    drawWheel();
+    ctx.restore();
+
+    if (progress < duration) {
+      requestAnimationFrame(animate);
+    } else {
+      angle += spin;
+      showResult();
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function showResult() {
+  const arc = 360 / options.length;
+  const index = Math.floor((360 - (angle % 360)) / arc) % options.length;
+  const name = options[index];
+
+  const personQuestions = questions[name];
+  const randomQuestion =
+    personQuestions[Math.floor(Math.random() * personQuestions.length)];
+
+  document.getElementById("popupName").innerText = name;
+  document.getElementById("popupText").innerText = randomQuestion;
+
+  document.getElementById("popup").classList.add("show");
+}
+
+function closePopup() {
+  document.getElementById("popup").classList.remove("show");
+}
+
+spinBtn.addEventListener("click", spinWheel);
+
+// pertama kali gambar
+drawWheel();
