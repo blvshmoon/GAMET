@@ -1,60 +1,71 @@
+/* ===== BODY ===== */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   text-align: center;
-  background: #ffeef2;
+  background: linear-gradient(135deg, #ffeef2, #ffd6e0);
   margin: 0;
   padding: 20px;
 }
 
+/* ===== TITLE ===== */
 h1 {
   color: #ff4d6d;
+  margin-bottom: 5px;
 }
 
 #info {
   font-weight: bold;
   margin-bottom: 10px;
+  color: #444;
 }
 
-/* BOARD */
+/* ===== BOARD ===== */
 #board {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  width: 90vmin;
-  height: 90vmin;
+  width: 92vmin;
+  height: 92vmin;
   margin: 20px auto;
-  border: 4px solid #ff4d6d;
-  border-radius: 10px;
+  border: 5px solid #ff4d6d;
+  border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* CELL */
+/* ===== CELL ===== */
 .cell {
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
   position: relative;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 3px;
+  padding: 4px;
   background: #fff;
+  transition: 0.2s;
 }
 
-/* ICON ULAR / TANGGA */
+.cell:hover {
+  background: #fff0f5;
+}
+
+/* ===== ICON ===== */
 .icon {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
+  bottom: 3px;
+  right: 3px;
   font-size: 16px;
 }
 
-/* PLAYER */
+/* ===== PLAYER ===== */
 .player {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   position: absolute;
-  bottom: 5px;
-  left: 5px;
+  bottom: 6px;
+  left: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
 }
 
 .p1 {
@@ -63,44 +74,47 @@ h1 {
 
 .p2 {
   background: #3a86ff;
-  left: 20px;
+  left: 22px;
 }
 
-/* DICE */
+/* ===== DICE ===== */
 #dice {
-  font-size: 40px;
+  font-size: 42px;
   margin: 15px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: 0.2s;
 }
 
 #dice:hover {
-  transform: scale(1.2);
+  transform: scale(1.2) rotate(10deg);
 }
 
-/* BUTTON */
+/* ===== BUTTON ===== */
 button {
-  padding: 8px 15px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 8px;
-  background: #ff4d6d;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #ff4d6d, #ff758f);
   color: white;
   cursor: pointer;
   margin: 5px;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #e63956;
+  transform: scale(1.05);
 }
 
-/* INPUT */
+/* ===== INPUT ===== */
 input {
-  padding: 8px;
-  border-radius: 8px;
+  padding: 9px;
+  border-radius: 10px;
   border: 1px solid #ccc;
+  outline: none;
 }
 
-/* MODAL */
+/* ===== MODAL ===== */
 #modal {
   position: fixed;
   top: 0;
@@ -113,14 +127,16 @@ input {
   align-items: center;
 }
 
+/* ===== MODAL CONTENT ===== */
 #modalContent {
   background: white;
   padding: 20px;
-  border-radius: 15px;
-  width: 80%;
-  max-width: 300px;
+  border-radius: 18px;
+  width: 85%;
+  max-width: 320px;
   text-align: center;
   animation: pop 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 #eventTitle {
@@ -130,12 +146,13 @@ input {
 
 #eventText {
   margin-bottom: 15px;
+  color: #333;
 }
 
-/* ANIMATION */
+/* ===== ANIMATION ===== */
 @keyframes pop {
   from {
-    transform: scale(0.5);
+    transform: scale(0.6);
     opacity: 0;
   }
   to {
