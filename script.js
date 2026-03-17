@@ -1,4 +1,4 @@
-// ===== FIREBASE (CDN) =====
+// ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyCjmjvMxFB8eDRYmyvSldsiBNJBs5fBGEQ",
   authDomain: "uler-tangga-td.firebaseapp.com",
@@ -12,6 +12,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// ===== DATA BOARD (WAJIB DI ATAS) =====
+const snakes = {99:54,70:55,52:42,25:2};
+const ladders = {4:14,9:31,28:84,40:59};
+
 // ===== GAME =====
 const board = document.getElementById("board");
 const diceEl = document.getElementById("dice");
@@ -23,12 +27,6 @@ let moving = false;
 let roomId = null;
 let playerIndex = null;
 let lastEventText = "";
-
-// langsung bikin board
-createBoard();
-
-const snakes = {99:54,70:55,52:42,25:2};
-const ladders = {4:14,9:31,28:84,40:59};
 
 // ===== PERTANYAAN 💗 =====
 const truthList = [
@@ -77,20 +75,6 @@ const truthList = [
 'aku kan pelupa yang di sengaja, kalau aku pura-pura lupain hal-hal kecil tentang kamu, kamu gimana? respon nya',
 'aku mau minta sesuatu dari kamu yang ga kamu pikirkan sama sekali sebelumnya, kamu siap ngasih nya?'
 ];
-];
-
-// ===== POPUP =====
-function showModal(title, text){
-  document.getElementById("eventTitle").innerText = title;
-  document.getElementById("eventText").innerText = text;
-  document.getElementById("modal").style.display = "flex";
-
-  const sound = document.getElementById("tingSound");
-  if(sound){
-    sound.currentTime = 0;
-    sound.play().catch(()=>{});
-  }
-}
 
 // ===== BOARD =====
 function createBoard(){
@@ -130,176 +114,5 @@ function createBoard(){
   }
 }
 
-function renderPlayers(){
-  document.querySelectorAll(".player").forEach(p=>p.remove());
-
-  positions.forEach((pos,index)=>{
-    if(pos > 0){
-      let piece = document.createElement("div");
-      piece.className = "player " + (index===0?"p1":"p2");
-      document.getElementById("cell-"+pos).appendChild(piece);
-    }
-  });
-}
-
-// ===== GAMEPLAY =====
-function rollDice(){
-  if(roomId && currentPlayer !== playerIndex) return;
-  if(moving) return;
-
-  moving = true;
-  diceEl.innerText = "🎲";
-
-  setTimeout(()=>{
-    let dice = Math.floor(Math.random()*6)+1;
-    diceEl.innerText = dice;
-    movePlayer(dice);
-
-    setTimeout(()=>{ diceEl.innerText="🎲"; },1000);
-  },500);
-}
-
-function movePlayer(steps){
-  let player = currentPlayer;
-
-  let interval = setInterval(()=>{
-    if(steps > 0){
-      positions[player]++;
-      if(positions[player] > 100) positions[player] = 100;
-
-      renderPlayers();
-      steps--;
-    }else{
-      clearInterval(interval);
-      checkSpecial(player);
-    }
-  },200);
-}
-
-function checkSpecial(player){
-  let pos = positions[player];
-
-  if(snakes[pos]) return animateMove(player, snakes[pos]);
-  if(ladders[pos]) return animateMove(player, ladders[pos]);
-
-  showQuestion(player);
-}
-
-function animateMove(player, target){
-  let interval = setInterval(()=>{
-    if(positions[player] < target) positions[player]++;
-    else if(positions[player] > target) positions[player]--;
-    else{
-      clearInterval(interval);
-      showQuestion(player);
-      return;
-    }
-
-    renderPlayers();
-  },150);
-}
-
-// ===== PERTANYAAN =====
-function showQuestion(player){
-  let pos = positions[player];
-
-  let title = "PERTANYAAN 💗";
-  let text = truthList[(pos-1)%truthList.length];
-
-  if(roomId){
-    db.ref("rooms/"+roomId).update({
-      event:{show:true,title,text},
-      positions:positions,
-      currentPlayer:currentPlayer
-    });
-  }else{
-    showModal(title,text);
-  }
-
-  if(pos === 100){
-    setTimeout(()=>{
-      alert("Player "+(player+1)+" MENANG 💗");
-      positions = [0,0];
-      renderPlayers();
-    },500);
-  }
-
-  currentPlayer = currentPlayer===0 ? 1 : 0;
-  document.getElementById("info").innerText =
-    "Giliran: Player " + (currentPlayer+1);
-
-  moving = false;
-  updateRoom();
-}
-
-// ===== MODAL =====
-function closeModal(){
-  document.getElementById("modal").style.display = "none";
-
-  if(roomId){
-    db.ref("rooms/"+roomId).update({
-      event:{show:false}
-    });
-  }
-}
-
-// ===== ROOM =====
-function generateRoomCode(){
-  return Math.random().toString(36).substring(2,7).toUpperCase();
-}
-
-function createRoom(){
-  roomId = generateRoomCode();
-  playerIndex = 0;
-
-  db.ref("rooms/"+roomId).set({
-    positions:[0,0],
-    currentPlayer:0,
-    event:{show:false}
-  });
-
-  alert("Room: " + roomId);
-  listenRoom();
-}
-
-function joinRoom(){
-  roomId = document.getElementById("roomInput").value.toUpperCase();
-  playerIndex = 1;
-  listenRoom();
-}
-
-function listenRoom(){
-  db.ref("rooms/"+roomId).on("value",(snapshot)=>{
-    const data = snapshot.val();
-
-    if(data){
-      positions = data.positions;
-      currentPlayer = data.currentPlayer;
-
-      renderPlayers();
-
-      document.getElementById("info").innerText =
-        "Giliran: Player " + (currentPlayer+1);
-
-      if(data.event && data.event.show && data.event.text !== lastEventText){
-        lastEventText = data.event.text;
-        showModal(data.event.title,data.event.text);
-      }
-    }
-  });
-}
-
-function updateRoom(){
-  if(roomId){
-    db.ref("rooms/"+roomId).update({
-      positions,
-      currentPlayer
-    });
-  }
-}
-
-// ===== GLOBAL =====
-window.rollDice = rollDice;
-window.createRoom = createRoom;
-window.joinRoom = joinRoom;
-window.closeModal = closeModal;
+// ===== INIT =====
+createBoard();
