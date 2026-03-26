@@ -3,25 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spin Game</title>
+
+  <title>Spin Game 🎡</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<h1> SPIN </h1>
+  <!-- Judul -->
+  <h1>🎡 SPIN GAME</h1>
 
-<canvas id="wheel"></canvas>
-<button id="spinBtn">Spin 💫</button>
+  <!-- Pointer -->
+  <div class="pointer"></div>
 
-<!-- 🎀 Popup -->
-<div id="popup" class="popup">
-  <div class="popup-content">
-    <h2 id="popupName"></h2>
-    <p id="popupText"></p>
-    <button onclick="closePopup()">OK 💗</button>
+  <!-- Wheel -->
+  <canvas id="wheel"></canvas>
+
+  <!-- Button -->
+  <button id="spinBtn">Spin 💫</button>
+
+  <!-- Popup -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2 id="popupName"></h2>
+      <p id="popupText"></p>
+      <button onclick="closePopup()">OK 💗</button>
+    </div>
   </div>
-</div>
 
-<script src="script.js"></script>
+  <!-- Script -->
+  <script src="script.js" defer></script>
+
 </body>
 </html>
