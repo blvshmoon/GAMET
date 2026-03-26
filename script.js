@@ -4,11 +4,9 @@ window.onload = function () {
   const ctx = canvas.getContext("2d");
   const spinBtn = document.getElementById("spinBtn");
 
-  // 🔥 FIX SIZE BIAR MUNCUL DI HP
   canvas.width = 300;
   canvas.height = 300;
 
-  // 🎡 isi wheel
   const options = [
     "Difa", "Lia",
     "Difa", "Lia",
@@ -16,7 +14,6 @@ window.onload = function () {
     "Difa", "Lia"
   ];
 
-  // 🎯 pertanyaan
   const questions = {
     Difa: [
       "Apa rahasia terbesar kamu?",
@@ -68,60 +65,65 @@ window.onload = function () {
   };
 
   let angle = 0;
+  let spinning = false;
 
   function drawWheel() {
     const arc = (2 * Math.PI) / options.length;
 
     for (let i = 0; i < options.length; i++) {
+      const start = i * arc;
+      const end = start + arc;
+
       ctx.beginPath();
-
       ctx.fillStyle = options[i] === "Difa" ? "#ffb6c1" : "#ff69b4";
-
       ctx.moveTo(150, 150);
-      ctx.arc(150, 150, 150, i * arc, (i + 1) * arc);
+      ctx.arc(150, 150, 150, start, end);
       ctx.fill();
 
       ctx.save();
       ctx.translate(150, 150);
-      ctx.rotate(i * arc + arc / 2);
+      ctx.rotate(start + arc / 2);
 
       ctx.fillStyle = "white";
-      ctx.font = "bold 16px Comic Sans MS";
+      ctx.font = "bold 14px Poppins";
 
-      // ✨ glow
-      ctx.shadowColor = "#ff69b4";
-      ctx.shadowBlur = 12;
-
-      ctx.fillText(options[i], 50, 5);
-
-      ctx.shadowBlur = 0;
+      ctx.fillText(options[i], 60, 5);
 
       ctx.restore();
     }
   }
 
   function spinWheel() {
-    let spin = Math.random() * 360 + 720;
-    let duration = 2000;
+    if (spinning) return;
+    spinning = true;
+
+    let spin = Math.random() * 360 + 720; // putaran
+    let duration = 3000;
     let start = null;
 
     function animate(timestamp) {
       if (!start) start = timestamp;
+
       let progress = timestamp - start;
-      let rotation = spin * (progress / duration);
+      let ease = 1 - Math.pow(1 - progress / duration, 3);
+      let currentRotation = spin * ease;
 
       ctx.clearRect(0, 0, 300, 300);
+
       ctx.save();
       ctx.translate(150, 150);
-      ctx.rotate((angle + rotation) * Math.PI / 180);
+      ctx.rotate((angle + currentRotation) * Math.PI / 180);
       ctx.translate(-150, -150);
+
       drawWheel();
+
       ctx.restore();
 
       if (progress < duration) {
         requestAnimationFrame(animate);
       } else {
         angle += spin;
+        spinning = false;
         showResult();
       }
     }
@@ -131,7 +133,11 @@ window.onload = function () {
 
   function showResult() {
     const arc = 360 / options.length;
-    const index = Math.floor((360 - (angle % 360)) / arc) % options.length;
+
+    // 🎯 biar sesuai pointer atas
+    const adjustedAngle = (angle + 90) % 360;
+
+    const index = Math.floor((360 - adjustedAngle) / arc) % options.length;
     const name = options[index];
 
     const personQuestions = questions[name];
