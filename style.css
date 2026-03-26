@@ -16,6 +16,13 @@ h1 {
   font-weight: 700;
   letter-spacing: 2px;
   margin-bottom: 10px;
+
+  /* ✨ NEON */
+  text-shadow:
+    0 0 5px #ff69b4,
+    0 0 10px #ff69b4,
+    0 0 20px #ff1493,
+    0 0 40px #ff1493;
 }
 
 /* 🔻 POINTER */
@@ -26,6 +33,10 @@ h1 {
   border-right: 12px solid transparent;
   border-bottom: 20px solid #ff4d88;
   margin-bottom: -10px;
+
+  /* ✨ NEON */
+  filter: drop-shadow(0 0 8px #ff1493)
+          drop-shadow(0 0 15px #ff69b4);
 }
 
 /* 🎡 WHEEL */
@@ -33,8 +44,14 @@ canvas {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   margin: 20px 0;
+
+  /* ✨ NEON */
+  box-shadow:
+    0 0 10px #ff69b4,
+    0 0 20px #ff69b4,
+    0 0 40px #ff1493,
+    0 0 60px #ff1493;
 }
 
 /* 🔘 BUTTON */
@@ -47,7 +64,13 @@ canvas {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(255, 77, 136, 0.4);
+
+  /* ✨ NEON */
+  box-shadow:
+    0 0 10px #ff69b4,
+    0 0 20px #ff69b4,
+    0 0 40px #ff1493;
+
   transition: all 0.2s ease;
 }
 
@@ -66,7 +89,8 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.6);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,13 +107,19 @@ canvas {
 
 /* 💖 POPUP BOX */
 .popup-content {
-  background: #ffffff;
+  background: #fff0f5;
   padding: 25px;
   border-radius: 20px;
   text-align: center;
   width: 80%;
   max-width: 300px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+  /* ✨ NEON */
+  box-shadow:
+    0 0 10px #ff69b4,
+    0 0 20px #ff69b4,
+    0 0 40px #ff1493,
+    0 0 60px #ff1493;
 
   transform: scale(0.7);
   transition: transform 0.3s ease;
@@ -104,6 +134,12 @@ canvas {
   color: #ff4d88;
   font-size: 22px;
   margin-bottom: 10px;
+
+  /* ✨ NEON */
+  text-shadow:
+    0 0 5px #ff69b4,
+    0 0 10px #ff69b4,
+    0 0 20px #ff1493;
 }
 
 /* 💬 TEXT */
@@ -122,6 +158,12 @@ canvas {
   color: white;
   cursor: pointer;
   font-weight: 600;
+
+  /* ✨ NEON */
+  box-shadow:
+    0 0 10px #ff69b4,
+    0 0 20px #ff1493;
+
   transition: 0.2s;
 }
 
